@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="lib/js/annotation/annotator.min.css">
 </head>
 <body>
+<br>
+<br>
 <div id="annotation-content">
   He was an old man who fished alone in a skiff in the Gulf Stream and he had gone eighty-four days now without taking a fish. In the first forty days a boy had been with him. But after forty days without a fish the boy's parents had told him that the old man was now definitely and finally salao, which is the worst form of unlucky, and the boy had gone at their orders in another boat which caught three good fish the first week. It made the boy sad to see the old man come in each day with his skiff empty and he always went down to help him carry either the coiled lines or the gaff and harpoon and the sail that was furled around the mast. The sail was patched with flour sacks and, furled, it looked like the flag of permanent defeat.
 </div>
@@ -18,7 +20,40 @@
 <script src="lib/js/annotation/annotator-full.min.js"></script>
 <script>
   $(function ($) {
-    $('#annotation-content').annotator();
+   var content = $('#annotation-content').annotator();
+    content.annotator('addPlugin', 'Permissions',{
+      user: {id: 6, name:'Alice'},
+      userId: function (user) {
+        if (user && user.id) {
+          return user.id;
+        }
+        return user;
+      },
+      showViewPermissionsCheckbox: false,
+      showEditPermissionsCheckbox: false,
+      userString: function (user) {
+        if (user && user.name) {
+          return user.name;
+        }
+        return user;
+      }
+    });
+    content.annotator('addPlugin', 'Store', {
+      // The endpoint of the store on your server.
+      prefix: 'https://localhost:3000/store/endpoint',
+
+      // Attach the uri of the current page to all annotations to allow search.
+      annotationData: {
+        'uri': 'http://this/document/only'
+      },
+
+      // This will perform a "search" action when the plugin loads. Will
+      // request the last 20 annotations for the current url.
+      // eg. /store/endpoint/search?limit=20&uri=http://this/document/only
+      loadFromSearch: {
+        'limit': 20
+      }
+    });
   });
 </script>
 </body>
